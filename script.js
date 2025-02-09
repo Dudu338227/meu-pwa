@@ -47,24 +47,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = document.getElementById('status').value;
 
         // Criar a nova entrada
-        const newEntry = document.createElement('div');
-        newEntry.className = 'entry';
-        newEntry.innerHTML = `
-            <h3>Setor: ${setor.charAt(0).toUpperCase() + setor.slice(1)}</h3>
-            <p><strong>Nome:</strong> ${nome}</p>
-            <p><strong>Data:</strong> ${data}</p>
-            <p><strong>Descrição:</strong> ${descricao}</p>
-            <p class="status"><strong>Status:</strong> <span class="${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></p>
-            <button onclick="toggleStatus(this)">Trocar para ${status === 'pendente' ? 'Feito' : 'Pendente'}</button>
-        `;
+        const newEntry = {
+            setor: setor,
+            nome: nome,
+            data: data,
+            descricao: descricao,
+            status: status
+        };
 
         // Salvar a entrada no localStorage
-        const entries = JSON.parse(localStorage.getItem('entries')) || {
-            recebimento: '',
-            expedicao: '',
-            separacao: ''
-        };
-        entries[setor] += newEntry.outerHTML;
+        const entries = JSON.parse(localStorage.getItem('entries')) || {};
+        entries[setor] = newEntry;
         localStorage.setItem('entries', JSON.stringify(entries));
 
         alert('Entrada adicionada com sucesso!');
@@ -86,36 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveEntries(); // Atualiza o localStorage após a mudança
     };
 
-    localStorage.setItem('entries', JSON.stringify({
-        recebimento: "Informações de Recebimento...",
-        expedicao: "Informações de Expedição...",
-        separacao: "Informações de Separação..."
-    }));
-
-    localStorage.setItem('entries', JSON.stringify({
-        recebimento: {
-            nome: 'gukigjkg',
-            data: '2025-01-22',
-            descricao: 'kjlkdjf',
-            status: 'Pendente'
-        }
-    }));
-    localStorage.setItem('entries', JSON.stringify({
-        recebimento: {
-            nome: 'gukigjkg',
-            data: '2025-01-22',
-            descricao: 'kjlkdjf',
-            status: 'Pendente'
-        }
-    }));
-function showSetor(setor) {
-    console.log(`Setor selecionado: ${setor}`); // Depuração
-    tabButtons.forEach(button => button.classList.remove('active'));
-    document.querySelectorAll('.entries').forEach(entry => entry.classList.remove('active'));
-
-    document.querySelector(`.tab-button[data-setor="${setor}"]`).classList.add('active');
-    document.getElementById(setor).classList.add('active');
-}
     // Função para salvar entradas
     function saveEntries() {
         const entries = {
