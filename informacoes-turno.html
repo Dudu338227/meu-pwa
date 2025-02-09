@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informações de Turno</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Informações de Turno</h1>
+        
+        <!-- Botões para cada setor -->
+        <div class="button-container">
+            <button class="tab-button active" data-setor="recebimento">Recebimento</button>
+            <button class="tab-button" data-setor="expedicao">Expedição</button>
+            <button class="tab-button" data-setor="separacao">Separação</button>
+        </div>
+
+        <!-- Contêineres para exibir as informações de cada setor -->
+        <div class="entries active" id="recebimento">
+            <p>Setor: Recebimento</p>
+            <p>Nome: gukigjkg</p>
+            <p>Data: 2025-01-22</p>
+            <p>Descrição: kjlkdjf</p>
+            <p>Status: <span id="status-recebimento">Pendente</span></p>
+            <button onclick="trocarStatus('recebimento')">Trocar para Feito</button>
+        </div>
+        <div class="entries" id="expedicao"></div>
+        <div class="entries" id="separacao"></div>
+
+        <!-- Botão para voltar -->
+        <div class="form-group">
+            <button onclick="voltarParaPassagemDeTurno()">Voltar</button>
+        </div>
+    </div>
+
+    <script>
+        // Função para voltar para a página "Passagem de Turno"
+        function voltarParaPassagemDeTurno() {
+            window.location.href = 'index.html';
+        }
+
+        // Função para trocar o status
+        function trocarStatus(setor) {
+            const statusElement = document.getElementById(`status-${setor}`);
+            if (statusElement.innerText === "Pendente") {
+                statusElement.innerText = "Feito";
+                // Atualiza o status no localStorage
+                const entries = JSON.parse(localStorage.getItem('entries')) || {};
+                entries[setor] = entries[setor] || {};
+                entries[setor].status = "Feito";
+                localStorage.setItem('entries', JSON.stringify(entries));
+            }
+        }
+
+        // Carregar as entradas salvas
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem('entries'));
+            if (entries) {
+                // Atualiza o conteúdo de cada setor com os dados do localStorage
+                if (entries.recebimento) {
+                    document.getElementById('recebimento').innerHTML = `
+                        <p>Setor: Recebimento</p>
+                        <p>Nome: ${entries.recebimento.nome || 'gukigjkg'}</p>
+                        <p>Data: ${entries.recebimento.data || '2025-01-22'}</p>
+                        <p>Descrição: ${entries.recebimento.descricao || 'kjlkdjf'}</p>
+                        <p>Status: <span id="status-recebimento">${entries.recebimento.status || 'Pendente'}</span></p>
+                        <button onclick="trocarStatus('recebimento')">Trocar para Feito</button>
+                    `;
+                }
+                // Repita para expedicao e separacao, se necessário
+            }
+        }
+
+        // Adicionar eventos aos botões dos setores
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const setor = button.getAttribute('data-setor');
+                showSetor(setor);
+            });
+        });
+
+        // Função para exibir as informações do setor selecionado
+        function showSetor(setor) {
+            // Remove a classe "active" de todos os botões e contêineres
+            tabButtons.forEach(button => button.classList.remove('active'));
+            document.querySelectorAll('.entries').forEach(entry => entry.classList.remove('active'));
+
+            // Adiciona a classe "active" ao botão e ao contêiner do setor selecionado
+            document.querySelector(`.tab-button[data-setor="${setor}"]`).classList.add('active');
+            document.getElementById(setor).classList.add('active');
+        }
+
+        // Carregar as entradas ao abrir a página
+        loadEntries();
+
+        // Exibir o setor "Recebimento" por padrão
+        showSetor('recebimento');
+    </script>
+</body>
+</html>

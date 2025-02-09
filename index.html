@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<link rel="manifest" href="manifest.json">
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(() => console.log("Service Worker registrado com sucesso!"))
+            .catch(error => console.log("Falha ao registrar Service Worker:", error));
+    }
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passagem de Turno</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Contêiner de Login -->
+    <div class="login-container" id="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email ou Nome de Usuário</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Entrar</button>
+            </div>
+        </form>
+        <div class="forgot-password">
+            <a href="#" id="forgot-password-link">Esqueceu a senha?</a>
+        </div>
+        <div class="register-link">
+            <a href="#" id="register-link">Cadastrar Usuário</a>
+        </div>
+    </div>
+
+    <!-- Contêiner Principal (Passagem de Turno) -->
+    <div class="container" id="main-container" style="display: none;">
+        <h1>Passagem de Turno</h1>
+        <div class="button-container">
+            <button type="button" onclick="window.location.href = 'informacoes-turno.html';" class="left-button">Ver Informações de Turno</button>
+            <button type="button" onclick="logout()" class="right-button back-to-login-button">Voltar ao Login</button>
+        </div>
+        <form id="entry-form">
+            <div class="form-group">
+                <label for="setor">Setor</label>
+                <select id="setor" name="setor" required>
+                    <option value="recebimento">Recebimento</option>
+                    <option value="expedicao">Expedição</option>
+                    <option value="separacao">Separação</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="data">Data</label>
+                <input type="date" id="data" name="data" required>
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição do Problema</label>
+                <textarea id="descricao" name="descricao" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="pendente">Pendente</option>
+                    <option value="feito">Feito</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit">Adicionar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
